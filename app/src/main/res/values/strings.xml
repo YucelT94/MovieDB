@@ -10,4 +10,5 @@
     <string name="profile">Profile</string>
     <string name="applogist">AppLogist</string>
     <string name="tv">Tv</string>
+    <string name="full_cast_crew"><![CDATA[Full Cast & Crew]]></string>
 </resources>

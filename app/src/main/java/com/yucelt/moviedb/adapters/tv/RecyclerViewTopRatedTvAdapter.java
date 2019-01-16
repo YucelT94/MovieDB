@@ -1,4 +1,4 @@
-package com.yucelt.moviedb.adapters.movies;
+package com.yucelt.moviedb.adapters.tv;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,27 +17,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.models.movies.nowplaying.MovieNowPlaying;
-import com.yucelt.moviedb.models.movies.popular.MoviePopular;
+import com.yucelt.moviedb.models.tv.toprated.TvTopRated;
 
-public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<RecyclerViewPopularMovieAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewPopularMovieAdapter";
+public class RecyclerViewTopRatedTvAdapter extends RecyclerView.Adapter<RecyclerViewTopRatedTvAdapter.ViewHolder> {
+    private static final String TAG = "RecyclerViewTopRatedTvAdapter";
 
-    private MoviePopular popular;
+    private TvTopRated topRated;
 
     private Context mContext;
 
     private int lastPosition = -1;
 
-    public RecyclerViewPopularMovieAdapter(Context context, MoviePopular popular) {
-        this.popular = popular;
+    public RecyclerViewTopRatedTvAdapter(Context context, TvTopRated topRated) {
+        this.topRated = topRated;
         this.mContext = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_popular_movies, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_top_rated_tv, parent, false);
         return new ViewHolder(view);
     }
 
@@ -47,7 +46,7 @@ public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<Recycl
         Log.d(TAG, "onBindViewHolder: called.");
 
         String baseImgUrl = "https://image.tmdb.org/t/p/original/";
-        String imgUrl = baseImgUrl + popular.getResults().get(position).getPosterPath();
+        String imgUrl = baseImgUrl + topRated.getResults().get(position).getPosterPath();
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new RoundedCorners(32));
@@ -55,30 +54,27 @@ public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<Recycl
         Glide.with(mContext)
                 .load(imgUrl)
                 .apply(requestOptions)
-                .into(holder.imageViewPopularMovies);
+                .into(holder.imageViewTopRatedTv);
 
-        holder.textViewPopularMovies.setText(popular.getResults().get(position).getTitle());
-        holder.textViewRateMovie.setText(String.valueOf(popular.getResults().get(position).getVoteAverage()));
+        holder.textViewTopRatedTv.setText(topRated.getResults().get(position).getName());
 
         setAnimation(holder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-        return popular.getResults().size();
+        return topRated.getResults().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageViewPopularMovies;
-        TextView textViewPopularMovies;
-        TextView textViewRateMovie;
+        ImageView imageViewTopRatedTv;
+        TextView textViewTopRatedTv;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageViewPopularMovies = itemView.findViewById(R.id.imageViewPopularMovies);
-            textViewPopularMovies = itemView.findViewById(R.id.textViewPopularMovies);
-            textViewRateMovie = itemView.findViewById(R.id.textViewRateMovie);
+            imageViewTopRatedTv = itemView.findViewById(R.id.imageViewTopRatedTv);
+            textViewTopRatedTv = itemView.findViewById(R.id.textViewTopRatedTv);
         }
     }
 

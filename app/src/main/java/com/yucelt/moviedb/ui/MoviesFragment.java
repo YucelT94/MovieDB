@@ -44,6 +44,7 @@ public class MoviesFragment extends Fragment {
     private MovieNowPlaying nowPlaying;
     private MoviePopular popular;
 
+    ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
     @BindView(R.id.textTopRatedMoviesTitle)
     TextView textTopRatedMoviesTitle;
@@ -93,10 +94,6 @@ public class MoviesFragment extends Fragment {
         linearLayoutManagerTopRated = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewTopRatedMovies.setLayoutManager(linearLayoutManagerTopRated);
 
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-
-        Log.d(TAG, "initRecyclerView: " + TMDB_API_KEY);
-
         Call<MovieTopRated> call = apiService.getTopRatedMovies(TMDB_API_KEY);
         call.enqueue(new Callback<MovieTopRated>() {
             @Override
@@ -127,10 +124,6 @@ public class MoviesFragment extends Fragment {
         linearLayoutManagerNowPlaying = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewNowPlayingMovies.setLayoutManager(linearLayoutManagerNowPlaying);
 
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-
-        Log.d(TAG, "initRecyclerView: " + TMDB_API_KEY);
-
         Call<MovieNowPlaying> call = apiService.getNowPlayingMovies(TMDB_API_KEY);
         call.enqueue(new Callback<MovieNowPlaying>() {
             @Override
@@ -160,10 +153,6 @@ public class MoviesFragment extends Fragment {
 
         linearLayoutManagerPopular = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPopularMovies.setLayoutManager(linearLayoutManagerPopular);
-
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-
-        Log.d(TAG, "initRecyclerView: " + TMDB_API_KEY);
 
         Call<MoviePopular> call = apiService.getPopularMovies(TMDB_API_KEY);
         call.enqueue(new Callback<MoviePopular>() {

@@ -1,4 +1,4 @@
-package com.yucelt.moviedb.adapters.movies;
+package com.yucelt.moviedb.adapters.tv;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,19 +17,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.models.movies.nowplaying.MovieNowPlaying;
-import com.yucelt.moviedb.models.movies.popular.MoviePopular;
+import com.yucelt.moviedb.models.tv.popular.TvPopular;
 
-public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<RecyclerViewPopularMovieAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewPopularMovieAdapter";
+public class RecyclerViewPopularTvAdapter extends RecyclerView.Adapter<RecyclerViewPopularTvAdapter.ViewHolder> {
+    private static final String TAG = "RecyclerViewPopularTvAdapter";
 
-    private MoviePopular popular;
+    private TvPopular popular;
 
     private Context mContext;
 
     private int lastPosition = -1;
 
-    public RecyclerViewPopularMovieAdapter(Context context, MoviePopular popular) {
+    public RecyclerViewPopularTvAdapter(Context context, TvPopular popular) {
         this.popular = popular;
         this.mContext = context;
     }
@@ -37,7 +36,7 @@ public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<Recycl
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_popular_movies, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_popular_tv, parent, false);
         return new ViewHolder(view);
     }
 
@@ -47,7 +46,7 @@ public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<Recycl
         Log.d(TAG, "onBindViewHolder: called.");
 
         String baseImgUrl = "https://image.tmdb.org/t/p/original/";
-        String imgUrl = baseImgUrl + popular.getResults().get(position).getPosterPath();
+        String imgUrl = baseImgUrl + popular.getResults().get(position).getBackdropPath();
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new RoundedCorners(32));
@@ -55,10 +54,10 @@ public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<Recycl
         Glide.with(mContext)
                 .load(imgUrl)
                 .apply(requestOptions)
-                .into(holder.imageViewPopularMovies);
+                .into(holder.imageViewPopularTv);
 
-        holder.textViewPopularMovies.setText(popular.getResults().get(position).getTitle());
-        holder.textViewRateMovie.setText(String.valueOf(popular.getResults().get(position).getVoteAverage()));
+        holder.textViewPopularTvTitle.setText(popular.getResults().get(position).getName());
+        holder.textViewRateTv.setText(String.valueOf(popular.getResults().get(position).getVoteAverage()));
 
         setAnimation(holder.itemView, position);
     }
@@ -70,21 +69,21 @@ public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<Recycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageViewPopularMovies;
-        TextView textViewPopularMovies;
-        TextView textViewRateMovie;
+        ImageView imageViewPopularTv;
+        TextView textViewPopularTvTitle;
+        TextView textViewRateTv;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageViewPopularMovies = itemView.findViewById(R.id.imageViewPopularMovies);
-            textViewPopularMovies = itemView.findViewById(R.id.textViewPopularMovies);
-            textViewRateMovie = itemView.findViewById(R.id.textViewRateMovie);
+            imageViewPopularTv = itemView.findViewById(R.id.imageViewPopularTv);
+            textViewPopularTvTitle = itemView.findViewById(R.id.textViewPopularTvTitle);
+            textViewRateTv = itemView.findViewById(R.id.textViewRateTv);
         }
     }
 
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }

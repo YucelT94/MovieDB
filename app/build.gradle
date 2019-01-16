@@ -16,6 +16,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildTypes.each {
+        def keystorePropertiesFile = rootProject.file("keystroke.properties")
+        def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+        it.buildConfigField 'String', 'TMDB_API_KEY', keystoreProperties['TMDBApiKey']
+    }
+
 }
 
 dependencies {

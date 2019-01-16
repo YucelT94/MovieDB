@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import com.yucelt.moviedb.R;
 
@@ -17,8 +15,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-
-    private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

@@ -7,4 +7,6 @@
     <string name="now_playing_title">Now Playing</string>
     <string name="popular_title">Popular</string>
     <string name="title">Title</string>
+    <string name="profile">Profile</string>
+    <string name="applogist">AppLogist</string>
 </resources>

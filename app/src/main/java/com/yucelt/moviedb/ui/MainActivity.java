@@ -1,4 +1,4 @@
-package com.yucelt.moviedb;
+package com.yucelt.moviedb.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -45,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Justice League"
                 android:textAllCaps="true"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_title_big"
@@ -59,7 +58,6 @@
                 android:layout_height="15dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Action, Adventure, Fantasy"
                 app:layout_constraintStart_toEndOf="@+id/imagePoster"
                 app:layout_constraintTop_toBottomOf="@+id/imageCover" />
 
@@ -97,7 +95,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Overview"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imagePoster" />
 

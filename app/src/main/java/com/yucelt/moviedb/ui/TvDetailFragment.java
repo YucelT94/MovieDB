@@ -2,6 +2,7 @@ package com.yucelt.moviedb.ui;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -48,7 +49,7 @@ public class TvDetailFragment extends Fragment {
 
     ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-    private String stringId;
+    private String stringId, stringTvName;
 
     @BindView(R.id.imageCover)
     ImageView imageCover;
@@ -87,10 +88,24 @@ public class TvDetailFragment extends Fragment {
 
         assert getArguments() != null;
         stringId = getArguments().getString("detail_id");
+        stringTvName = getArguments().getString("detail_name");
 
         initDialog();
         initPage();
         initRecyclerViewCast();
+
+        imageShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "I like this TV show: " + stringTvName;
+                String shareSub = "TV Show Suggestion";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareSub);
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share using"));
+            }
+        });
 
         return view;
     }

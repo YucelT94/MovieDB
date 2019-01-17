@@ -22,8 +22,8 @@
 
             <ImageView
                 android:id="@+id/imageCast"
-                android:layout_width="@dimen/movie_poster_width"
-                android:layout_height="@dimen/movie_poster_heigh"
+                android:layout_width="@dimen/detail_poster_width"
+                android:layout_height="@dimen/detail_poster_heigh"
                 android:layout_marginBottom="@dimen/card_margin"
                 android:elevation="@dimen/image_elevation"
                 card_view:srcCompat="@tools:sample/avatars" />

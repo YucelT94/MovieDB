@@ -88,6 +88,7 @@ public class TvFragment extends Fragment {
                     public void onItemClick(View v, int position) {
                         Bundle bundle = new Bundle();
                         bundle.putString("detail_id", String.valueOf(topRated.getResults().get(position).getId()));
+                        bundle.putString("detail_name", String.valueOf(topRated.getResults().get(position).getOriginalName()));
                         TvDetailFragment fragment = new TvDetailFragment();
                         fragment.setArguments(bundle);
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -132,6 +133,7 @@ public class TvFragment extends Fragment {
                     public void onItemClick(View v, int position) {
                         Bundle bundle = new Bundle();
                         bundle.putString("detail_id", String.valueOf(popular.getResults().get(position).getId()));
+                        bundle.putString("detail_name", String.valueOf(popular.getResults().get(position).getOriginalName()));
                         TvDetailFragment fragment = new TvDetailFragment();
                         fragment.setArguments(bundle);
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();

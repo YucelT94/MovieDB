@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.yucelt.moviedb.ui.MovieDetailFragment">
+    tools:context="com.yucelt.moviedb.ui.TvDetailFragment">
 
     <ImageView
         android:id="@+id/imageCover"

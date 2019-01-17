@@ -1,7 +1,6 @@
 package com.yucelt.moviedb.adapters.tv;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,20 +16,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.models.tv.popular.TvPopular;
+import com.yucelt.moviedb.models.tv.popular.Result;
+import com.yucelt.moviedb.network.ApiClient;
 
-public class RecyclerViewPopularTvAdapter extends RecyclerView.Adapter<RecyclerViewPopularTvAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewPopularTvAdapter";
+import java.util.List;
 
-    private TvPopular popular;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private Context mContext;
+public class PopularTvAdapter extends RecyclerView.Adapter<PopularTvAdapter.ViewHolder> {
+    private static final String TAG = "PopularTvAdapter";
+
+    private List<Result> popular;
 
     private int lastPosition = -1;
 
-    public RecyclerViewPopularTvAdapter(Context context, TvPopular popular) {
+    public PopularTvAdapter(List<Result> popular) {
         this.popular = popular;
-        this.mContext = context;
     }
 
     @NonNull
@@ -45,45 +47,47 @@ public class RecyclerViewPopularTvAdapter extends RecyclerView.Adapter<RecyclerV
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
-        String baseImgUrl = "https://image.tmdb.org/t/p/original/";
-        String imgUrl = baseImgUrl + popular.getResults().get(position).getBackdropPath();
+        String imgUrl = ApiClient.baseImgUrl + popular.get(position).getBackdropPath();
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new RoundedCorners(32));
 
-        Glide.with(mContext)
+        Glide.with(holder.imageViewPopularTv.getContext())
                 .load(imgUrl)
                 .apply(requestOptions)
                 .into(holder.imageViewPopularTv);
 
-        holder.textViewPopularTvTitle.setText(popular.getResults().get(position).getName());
-        holder.textViewRateTv.setText(String.valueOf(popular.getResults().get(position).getVoteAverage()));
+        holder.textViewPopularTvTitle.setText(popular.get(position).getName());
+        holder.textViewRateTv.setText(String.valueOf(popular.get(position).getVoteAverage()));
 
         setAnimation(holder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-        return popular.getResults().size();
+        return popular.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.imageViewPopularTv)
         ImageView imageViewPopularTv;
+
+        @BindView(R.id.textViewPopularTvTitle)
         TextView textViewPopularTvTitle;
+
+        @BindView(R.id.textViewRateTv)
         TextView textViewRateTv;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageViewPopularTv = itemView.findViewById(R.id.imageViewPopularTv);
-            textViewPopularTvTitle = itemView.findViewById(R.id.textViewPopularTvTitle);
-            textViewRateTv = itemView.findViewById(R.id.textViewRateTv);
+            ButterKnife.bind(this, itemView);
         }
     }
 
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.item_animation_fall_down);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }

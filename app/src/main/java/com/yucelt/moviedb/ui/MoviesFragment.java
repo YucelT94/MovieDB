@@ -15,14 +15,14 @@ import android.widget.TextView;
 
 import com.yucelt.moviedb.BuildConfig;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.adapters.movies.RecyclerViewNowPlayingMovieAdapter;
-import com.yucelt.moviedb.adapters.movies.RecyclerViewPopularMovieAdapter;
-import com.yucelt.moviedb.adapters.movies.RecyclerViewTopRatedMovieAdapter;
+import com.yucelt.moviedb.adapters.movies.NowPlayingMovieAdapter;
+import com.yucelt.moviedb.adapters.movies.PopularMovieAdapter;
+import com.yucelt.moviedb.adapters.movies.TopRatedMovieAdapter;
 import com.yucelt.moviedb.models.movies.nowplaying.MovieNowPlaying;
 import com.yucelt.moviedb.models.movies.popular.MoviePopular;
 import com.yucelt.moviedb.models.movies.toprated.MovieTopRated;
-import com.yucelt.moviedb.services.ApiClient;
-import com.yucelt.moviedb.services.ApiInterface;
+import com.yucelt.moviedb.network.ApiClient;
+import com.yucelt.moviedb.network.ApiInterface;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,9 +36,9 @@ public class MoviesFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    private RecyclerViewTopRatedMovieAdapter adapterTopRated;
-    private RecyclerViewNowPlayingMovieAdapter adapterNowPlaying;
-    private RecyclerViewPopularMovieAdapter adapterPopular;
+    private TopRatedMovieAdapter adapterTopRated;
+    private NowPlayingMovieAdapter adapterNowPlaying;
+    private PopularMovieAdapter adapterPopular;
     private RecyclerView.LayoutManager linearLayoutManagerTopRated, linearLayoutManagerNowPlaying, linearLayoutManagerPopular;
     private MovieTopRated topRated;
     private MovieNowPlaying nowPlaying;
@@ -78,16 +78,6 @@ public class MoviesFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     private void initRecyclerViewTopRated() {
         showProgressDialog();
 
@@ -100,7 +90,7 @@ public class MoviesFragment extends Fragment {
             public void onResponse(Call<MovieTopRated> call, Response<MovieTopRated> response) {
                 topRated = response.body();
 
-                adapterTopRated = new RecyclerViewTopRatedMovieAdapter(getActivity(), topRated);
+                adapterTopRated = new TopRatedMovieAdapter(topRated.getResults());
                 recyclerViewTopRatedMovies.setAdapter(adapterTopRated);
                 adapterTopRated.notifyDataSetChanged();
 
@@ -130,7 +120,7 @@ public class MoviesFragment extends Fragment {
             public void onResponse(Call<MovieNowPlaying> call, Response<MovieNowPlaying> response) {
                 nowPlaying = response.body();
 
-                adapterNowPlaying = new RecyclerViewNowPlayingMovieAdapter(getActivity(), nowPlaying);
+                adapterNowPlaying = new NowPlayingMovieAdapter(nowPlaying.getResults());
                 recyclerViewNowPlayingMovies.setAdapter(adapterNowPlaying);
                 adapterNowPlaying.notifyDataSetChanged();
 
@@ -160,7 +150,7 @@ public class MoviesFragment extends Fragment {
             public void onResponse(Call<MoviePopular> call, Response<MoviePopular> response) {
                 popular = response.body();
 
-                adapterPopular = new RecyclerViewPopularMovieAdapter(getActivity(), popular);
+                adapterPopular = new PopularMovieAdapter(popular.getResults());
                 recyclerViewPopularMovies.setAdapter(adapterPopular);
                 adapterPopular.notifyDataSetChanged();
 

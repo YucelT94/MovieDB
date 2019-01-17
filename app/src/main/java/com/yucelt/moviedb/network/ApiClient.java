@@ -1,4 +1,4 @@
-package com.yucelt.moviedb.services;
+package com.yucelt.moviedb.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,6 +9,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
+    public static final String baseImgUrl = "https://image.tmdb.org/t/p/original/";
+
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient() {

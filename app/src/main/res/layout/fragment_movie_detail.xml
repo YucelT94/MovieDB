@@ -62,57 +62,24 @@
         android:layout_marginTop="8dp"
         android:text="9.8"
         android:textColor="@android:color/holo_red_dark"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/imagePoster"
         app:layout_constraintTop_toBottomOf="@+id/textGenre" />
 
-    <ImageView
-        android:id="@+id/imageRate1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="240dp"
+        android:layout_height="47dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/ic_star_selected"
+        android:numStars="5"
+        android:rating="3.5"
+        android:scaleX=".5"
+        android:scaleY=".5"
+        android:stepSize="0.5"
+        android:transformPivotX="0dp"
+        android:transformPivotY="0dp"
         app:layout_constraintStart_toEndOf="@+id/textRate"
-        app:layout_constraintTop_toBottomOf="@+id/textGenre" />
-
-    <ImageView
-        android:id="@+id/imageRate2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_star_selected"
-        app:layout_constraintStart_toEndOf="@+id/imageRate1"
-        app:layout_constraintTop_toBottomOf="@+id/textGenre" />
-
-    <ImageView
-        android:id="@+id/imageRate3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_star_selected"
-        app:layout_constraintStart_toEndOf="@+id/imageRate2"
-        app:layout_constraintTop_toBottomOf="@+id/textGenre" />
-
-    <ImageView
-        android:id="@+id/imageRate4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_star_selected"
-        app:layout_constraintStart_toEndOf="@+id/imageRate3"
-        app:layout_constraintTop_toBottomOf="@+id/textGenre" />
-
-    <ImageView
-        android:id="@+id/imageRate5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_star"
-        app:layout_constraintStart_toEndOf="@+id/imageRate4"
         app:layout_constraintTop_toBottomOf="@+id/textGenre" />
 
     <TextView

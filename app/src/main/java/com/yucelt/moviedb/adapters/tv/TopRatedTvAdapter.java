@@ -1,7 +1,6 @@
 package com.yucelt.moviedb.adapters.tv;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,20 +16,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.models.tv.toprated.TvTopRated;
+import com.yucelt.moviedb.models.tv.toprated.Result;
+import com.yucelt.moviedb.network.ApiClient;
 
-public class RecyclerViewTopRatedTvAdapter extends RecyclerView.Adapter<RecyclerViewTopRatedTvAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewTopRatedTvAdapter";
+import java.util.List;
 
-    private TvTopRated topRated;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private Context mContext;
+public class TopRatedTvAdapter extends RecyclerView.Adapter<TopRatedTvAdapter.ViewHolder> {
+    private static final String TAG = "TopRatedTvAdapter";
+
+    private List<Result> topRated;
 
     private int lastPosition = -1;
 
-    public RecyclerViewTopRatedTvAdapter(Context context, TvTopRated topRated) {
+    public TopRatedTvAdapter(List<Result> topRated) {
         this.topRated = topRated;
-        this.mContext = context;
     }
 
     @NonNull
@@ -45,42 +47,43 @@ public class RecyclerViewTopRatedTvAdapter extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
-        String baseImgUrl = "https://image.tmdb.org/t/p/original/";
-        String imgUrl = baseImgUrl + topRated.getResults().get(position).getPosterPath();
+        String imgUrl = ApiClient.baseImgUrl + topRated.get(position).getPosterPath();
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new RoundedCorners(32));
 
-        Glide.with(mContext)
+        Glide.with(holder.imageViewTopRatedTv.getContext())
                 .load(imgUrl)
                 .apply(requestOptions)
                 .into(holder.imageViewTopRatedTv);
 
-        holder.textViewTopRatedTv.setText(topRated.getResults().get(position).getName());
+        holder.textViewTopRatedTv.setText(topRated.get(position).getName());
 
         setAnimation(holder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-        return topRated.getResults().size();
+        return topRated.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.imageViewTopRatedTv)
         ImageView imageViewTopRatedTv;
+
+        @BindView(R.id.textViewTopRatedTv)
         TextView textViewTopRatedTv;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageViewTopRatedTv = itemView.findViewById(R.id.imageViewTopRatedTv);
-            textViewTopRatedTv = itemView.findViewById(R.id.textViewTopRatedTv);
+            ButterKnife.bind(this, itemView);
         }
     }
 
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.item_animation_fall_down);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }

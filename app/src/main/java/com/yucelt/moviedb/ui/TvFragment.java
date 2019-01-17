@@ -15,12 +15,12 @@ import android.widget.TextView;
 
 import com.yucelt.moviedb.BuildConfig;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.adapters.tv.RecyclerViewPopularTvAdapter;
-import com.yucelt.moviedb.adapters.tv.RecyclerViewTopRatedTvAdapter;
+import com.yucelt.moviedb.adapters.tv.PopularTvAdapter;
+import com.yucelt.moviedb.adapters.tv.TopRatedTvAdapter;
 import com.yucelt.moviedb.models.tv.popular.TvPopular;
 import com.yucelt.moviedb.models.tv.toprated.TvTopRated;
-import com.yucelt.moviedb.services.ApiClient;
-import com.yucelt.moviedb.services.ApiInterface;
+import com.yucelt.moviedb.network.ApiClient;
+import com.yucelt.moviedb.network.ApiInterface;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,8 +34,8 @@ public class TvFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    private RecyclerViewTopRatedTvAdapter adapterTopRated;
-    private RecyclerViewPopularTvAdapter adapterPopular;
+    private TopRatedTvAdapter adapterTopRated;
+    private PopularTvAdapter adapterPopular;
     private RecyclerView.LayoutManager linearLayoutManagerTopRated, linearLayoutManagerPopular;
     private TvTopRated topRated;
     private TvPopular popular;
@@ -67,16 +67,6 @@ public class TvFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     private void initRecyclerViewTopRated() {
         showProgressDialog();
 
@@ -91,7 +81,7 @@ public class TvFragment extends Fragment {
             public void onResponse(Call<TvTopRated> call, Response<TvTopRated> response) {
                 topRated = response.body();
 
-                adapterTopRated = new RecyclerViewTopRatedTvAdapter(getActivity(), topRated);
+                adapterTopRated = new TopRatedTvAdapter(topRated.getResults());
                 recyclerViewTopRatedTv.setAdapter(adapterTopRated);
                 adapterTopRated.notifyDataSetChanged();
 
@@ -123,7 +113,7 @@ public class TvFragment extends Fragment {
             public void onResponse(Call<TvPopular> call, Response<TvPopular> response) {
                 popular = response.body();
 
-                adapterPopular = new RecyclerViewPopularTvAdapter(getActivity(), popular);
+                adapterPopular = new PopularTvAdapter(popular.getResults());
                 recyclerViewPopularTv.setAdapter(adapterPopular);
                 adapterPopular.notifyDataSetChanged();
 

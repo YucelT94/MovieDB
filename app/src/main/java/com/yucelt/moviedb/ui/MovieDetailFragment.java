@@ -11,14 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yucelt.moviedb.BuildConfig;
 import com.yucelt.moviedb.R;
 import com.yucelt.moviedb.models.movies.detail.MovieDetail;
-import com.yucelt.moviedb.services.ApiClient;
-import com.yucelt.moviedb.services.ApiInterface;
+import com.yucelt.moviedb.network.ApiClient;
+import com.yucelt.moviedb.network.ApiInterface;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,20 +43,8 @@ public class MovieDetailFragment extends Fragment {
     @BindView(R.id.imagePoster)
     ImageView imagePoster;
 
-    @BindView(R.id.imageRate1)
-    ImageView imageRate1;
-
-    @BindView(R.id.imageRate2)
-    ImageView imageRate2;
-
-    @BindView(R.id.imageRate3)
-    ImageView imageRate3;
-
-    @BindView(R.id.imageRate4)
-    ImageView imageRate4;
-
-    @BindView(R.id.imageRate5)
-    ImageView imageRate5;
+    @BindView(R.id.ratingBar)
+    RatingBar ratingBar;
 
     @BindView(R.id.imageShare)
     ImageView imageShare;
@@ -92,16 +81,6 @@ public class MovieDetailFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     private void initPage() {
         showProgressDialog();
 
@@ -111,18 +90,16 @@ public class MovieDetailFragment extends Fragment {
             public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
                 MovieDetail movieDetail = response.body();
 
-                String baseImgUrl = "https://image.tmdb.org/t/p/original/";
                 Double star = movieDetail.getVoteAverage() / 2;
 
                 Glide.with(getActivity())
-                        .load(baseImgUrl + movieDetail.getBackdropPath())
+                        .load(ApiClient.baseImgUrl + movieDetail.getBackdropPath())
                         .into(imageCover);
 
                 Glide.with(getActivity())
-                        .load(baseImgUrl + movieDetail.getPosterPath())
+                        .load(ApiClient.baseImgUrl + movieDetail.getPosterPath())
                         .into(imagePoster);
 
-                assert movieDetail != null;
                 textTitle.setText(movieDetail.getTitle());
 
                 String genres = "";
@@ -137,43 +114,7 @@ public class MovieDetailFragment extends Fragment {
                 textRate.setText(String.valueOf(movieDetail.getVoteAverage()));
                 textOverview.setText(movieDetail.getOverview());
 
-                if (star < 1) {
-                    imageRate1.setImageResource(R.drawable.ic_star);
-                    imageRate2.setImageResource(R.drawable.ic_star);
-                    imageRate3.setImageResource(R.drawable.ic_star);
-                    imageRate4.setImageResource(R.drawable.ic_star);
-                    imageRate5.setImageResource(R.drawable.ic_star);
-                } else if (star < 2) {
-                    imageRate1.setImageResource(R.drawable.ic_star_selected);
-                    imageRate2.setImageResource(R.drawable.ic_star);
-                    imageRate3.setImageResource(R.drawable.ic_star);
-                    imageRate4.setImageResource(R.drawable.ic_star);
-                    imageRate5.setImageResource(R.drawable.ic_star);
-                } else if (star < 3) {
-                    imageRate1.setImageResource(R.drawable.ic_star_selected);
-                    imageRate2.setImageResource(R.drawable.ic_star_selected);
-                    imageRate3.setImageResource(R.drawable.ic_star);
-                    imageRate4.setImageResource(R.drawable.ic_star);
-                    imageRate5.setImageResource(R.drawable.ic_star);
-                } else if (star < 4) {
-                    imageRate1.setImageResource(R.drawable.ic_star_selected);
-                    imageRate2.setImageResource(R.drawable.ic_star_selected);
-                    imageRate3.setImageResource(R.drawable.ic_star_selected);
-                    imageRate4.setImageResource(R.drawable.ic_star);
-                    imageRate5.setImageResource(R.drawable.ic_star);
-                } else if (star < 5) {
-                    imageRate1.setImageResource(R.drawable.ic_star_selected);
-                    imageRate2.setImageResource(R.drawable.ic_star_selected);
-                    imageRate3.setImageResource(R.drawable.ic_star_selected);
-                    imageRate4.setImageResource(R.drawable.ic_star_selected);
-                    imageRate5.setImageResource(R.drawable.ic_star);
-                } else if (star == 5) {
-                    imageRate1.setImageResource(R.drawable.ic_star_selected);
-                    imageRate2.setImageResource(R.drawable.ic_star_selected);
-                    imageRate3.setImageResource(R.drawable.ic_star_selected);
-                    imageRate4.setImageResource(R.drawable.ic_star_selected);
-                    imageRate5.setImageResource(R.drawable.ic_star_selected);
-                }
+                ratingBar.setRating(star.floatValue());
 
                 hideProgressDialog();
             }

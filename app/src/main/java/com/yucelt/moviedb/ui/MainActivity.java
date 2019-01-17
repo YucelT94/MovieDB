@@ -22,28 +22,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment fragment = null;
             switch (item.getItemId()) {
                 case R.id.navigation_movies:
-                    fragment = new MoviesFragment();
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.addToBackStack("MoviesFragment");
-                    ft.commit();
+                    changeFragment(new MoviesFragment(), "MoviesFragment");
                     return true;
                 case R.id.navigation_tv:
-                    fragment = new TvFragment();
-                    FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                    ft2.replace(R.id.content_frame, fragment);
-                    ft2.addToBackStack("TvFragment");
-                    ft2.commit();
+                    changeFragment(new TvFragment(), "TvFragment");
                     return true;
                 case R.id.navigation_profile:
-                    fragment = new ProfileFragment();
-                    FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
-                    ft3.replace(R.id.content_frame, fragment);
-                    ft3.addToBackStack("ProfileFragment");
-                    ft3.commit();
+                    changeFragment(new ProfileFragment(), "ProfileFragment");
                     return true;
             }
             return false;
@@ -64,5 +51,12 @@ public class MainActivity extends AppCompatActivity {
         navigation.setItemIconTintList(null);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_movies);
+    }
+
+    protected void changeFragment(Fragment fragment, String fragmentTag) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.addToBackStack(fragmentTag);
+        ft.commit();
     }
 }

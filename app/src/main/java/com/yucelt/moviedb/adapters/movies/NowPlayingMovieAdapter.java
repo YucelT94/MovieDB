@@ -1,11 +1,8 @@
 package com.yucelt.moviedb.adapters.movies;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,22 +19,25 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.models.movies.nowplaying.MovieNowPlaying;
+import com.yucelt.moviedb.models.movies.nowplaying.Result;
+import com.yucelt.moviedb.network.ApiClient;
 import com.yucelt.moviedb.ui.MovieDetailFragment;
 import com.yucelt.moviedb.utilities.Config;
 
-public class RecyclerViewNowPlayingMovieAdapter extends RecyclerView.Adapter<RecyclerViewNowPlayingMovieAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewNowPlayingMovieAdapter";
+import java.util.List;
 
-    private MovieNowPlaying nowPlaying;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private Context mContext;
+public class NowPlayingMovieAdapter extends RecyclerView.Adapter<NowPlayingMovieAdapter.ViewHolder> {
+    private static final String TAG = "NowPlayingMovieAdapter";
+
+    private List<Result> nowPlaying;
 
     private int lastPosition = -1;
 
-    public RecyclerViewNowPlayingMovieAdapter(Context context, MovieNowPlaying nowPlaying) {
+    public NowPlayingMovieAdapter(List<Result> nowPlaying) {
         this.nowPlaying = nowPlaying;
-        this.mContext = context;
     }
 
     @NonNull
@@ -52,18 +52,18 @@ public class RecyclerViewNowPlayingMovieAdapter extends RecyclerView.Adapter<Rec
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
-        String baseImgUrl = "https://image.tmdb.org/t/p/original/";
-        String imgUrl = baseImgUrl + nowPlaying.getResults().get(position).getPosterPath();
+
+        String imgUrl = ApiClient.baseImgUrl + nowPlaying.get(position).getPosterPath();
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new RoundedCorners(32));
 
-        Glide.with(mContext)
+        Glide.with(holder.imageViewNowPlayingMovies.getContext())
                 .load(imgUrl)
                 .apply(requestOptions)
                 .into(holder.imageViewNowPlayingMovies);
 
-        holder.textViewNowPlayingMovies.setText(nowPlaying.getResults().get(position).getTitle());
+        holder.textViewNowPlayingMovies.setText(nowPlaying.get(position).getTitle());
 
         setAnimation(holder.itemView, position);
 
@@ -71,7 +71,7 @@ public class RecyclerViewNowPlayingMovieAdapter extends RecyclerView.Adapter<Rec
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("detail_id", String.valueOf(nowPlaying.getResults().get(position).getId()));
+                bundle.putString("detail_id", String.valueOf(nowPlaying.get(position).getId()));
 
                 MovieDetailFragment fragment = new MovieDetailFragment();
                 fragment.setArguments(bundle);
@@ -85,25 +85,29 @@ public class RecyclerViewNowPlayingMovieAdapter extends RecyclerView.Adapter<Rec
 
     @Override
     public int getItemCount() {
-        return nowPlaying.getResults().size();
+        return nowPlaying.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.cardViewNowPlayingMovies)
         RelativeLayout cardViewNowPlayingMovies;
+
+        @BindView(R.id.imageViewNowPlayingMovies)
         ImageView imageViewNowPlayingMovies;
+
+        @BindView(R.id.textViewNowPlayingMovies)
         TextView textViewNowPlayingMovies;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            cardViewNowPlayingMovies = itemView.findViewById(R.id.cardViewNowPlayingMovies);
-            imageViewNowPlayingMovies = itemView.findViewById(R.id.imageViewNowPlayingMovies);
-            textViewNowPlayingMovies = itemView.findViewById(R.id.textViewNowPlayingMovies);
+            ButterKnife.bind(this, itemView);
         }
     }
 
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.item_animation_scale);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }

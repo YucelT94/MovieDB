@@ -1,7 +1,6 @@
 package com.yucelt.moviedb.adapters.movies;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
@@ -14,35 +13,36 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.models.movies.nowplaying.MovieNowPlaying;
-import com.yucelt.moviedb.models.movies.popular.MoviePopular;
+import com.yucelt.moviedb.models.movies.toprated.Result;
+import com.yucelt.moviedb.network.ApiClient;
 import com.yucelt.moviedb.ui.MovieDetailFragment;
 import com.yucelt.moviedb.utilities.Config;
 
-public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<RecyclerViewPopularMovieAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewPopularMovieAdapter";
+import java.util.List;
 
-    private MoviePopular popular;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private Context mContext;
+public class TopRatedMovieAdapter extends RecyclerView.Adapter<TopRatedMovieAdapter.ViewHolder> {
+    private static final String TAG = "TopRatedMovieAdapter";
+
+    private List<Result> topRated;
 
     private int lastPosition = -1;
 
-    public RecyclerViewPopularMovieAdapter(Context context, MoviePopular popular) {
-        this.popular = popular;
-        this.mContext = context;
+    public TopRatedMovieAdapter(List<Result> topRated) {
+        this.topRated = topRated;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_popular_movies, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_top_rated_movies, parent, false);
         return new ViewHolder(view);
     }
 
@@ -51,27 +51,23 @@ public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
-        String baseImgUrl = "https://image.tmdb.org/t/p/original/";
-        String imgUrl = baseImgUrl + popular.getResults().get(position).getPosterPath();
+        String imgUrl = ApiClient.baseImgUrl + topRated.get(position).getBackdropPath();
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new RoundedCorners(32));
 
-        Glide.with(mContext)
+        Glide.with(holder.imageViewTopRatedMovies.getContext())
                 .load(imgUrl)
                 .apply(requestOptions)
-                .into(holder.imageViewPopularMovies);
-
-        holder.textViewPopularMovies.setText(popular.getResults().get(position).getTitle());
-        holder.textViewRateMovie.setText(String.valueOf(popular.getResults().get(position).getVoteAverage()));
+                .into(holder.imageViewTopRatedMovies);
 
         setAnimation(holder.itemView, position);
 
-        holder.cardViewPopularMovies.setOnClickListener(new View.OnClickListener() {
+        holder.cardViewTopRatedMovies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("detail_id", String.valueOf(popular.getResults().get(position).getId()));
+                bundle.putString("detail_id", String.valueOf(topRated.get(position).getId()));
 
                 MovieDetailFragment fragment = new MovieDetailFragment();
                 fragment.setArguments(bundle);
@@ -85,27 +81,26 @@ public class RecyclerViewPopularMovieAdapter extends RecyclerView.Adapter<Recycl
 
     @Override
     public int getItemCount() {
-        return popular.getResults().size();
+        return topRated.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        RelativeLayout cardViewPopularMovies;
-        ImageView imageViewPopularMovies;
-        TextView textViewPopularMovies;
-        TextView textViewRateMovie;
+
+        @BindView(R.id.cardViewTopRatedMovies)
+        RelativeLayout cardViewTopRatedMovies;
+
+        @BindView(R.id.imageViewTopRatedMovies)
+        ImageView imageViewTopRatedMovies;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            cardViewPopularMovies = itemView.findViewById(R.id.cardViewPopularMovies);
-            imageViewPopularMovies = itemView.findViewById(R.id.imageViewPopularMovies);
-            textViewPopularMovies = itemView.findViewById(R.id.textViewPopularMovies);
-            textViewRateMovie = itemView.findViewById(R.id.textViewRateMovie);
+            ButterKnife.bind(this, itemView);
         }
     }
 
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.item_animation_fall_down);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }

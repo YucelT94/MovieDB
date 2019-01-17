@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.yucelt.moviedb.models.tv.popular.TvPopular;
 import com.yucelt.moviedb.models.tv.toprated.TvTopRated;
 import com.yucelt.moviedb.network.ApiClient;
 import com.yucelt.moviedb.network.ApiInterface;
+import com.yucelt.moviedb.utilities.OnItemClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,7 +83,19 @@ public class TvFragment extends Fragment {
             public void onResponse(Call<TvTopRated> call, Response<TvTopRated> response) {
                 topRated = response.body();
 
-                adapterTopRated = new TopRatedTvAdapter(topRated.getResults());
+                adapterTopRated = new TopRatedTvAdapter(topRated.getResults(), new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("detail_id", String.valueOf(topRated.getResults().get(position).getId()));
+                        TvDetailFragment fragment = new TvDetailFragment();
+                        fragment.setArguments(bundle);
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack("TvDetailFragment");
+                        ft.commit();
+                    }
+                });
                 recyclerViewTopRatedTv.setAdapter(adapterTopRated);
                 adapterTopRated.notifyDataSetChanged();
 
@@ -113,7 +127,19 @@ public class TvFragment extends Fragment {
             public void onResponse(Call<TvPopular> call, Response<TvPopular> response) {
                 popular = response.body();
 
-                adapterPopular = new PopularTvAdapter(popular.getResults());
+                adapterPopular = new PopularTvAdapter(popular.getResults(), new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("detail_id", String.valueOf(popular.getResults().get(position).getId()));
+                        TvDetailFragment fragment = new TvDetailFragment();
+                        fragment.setArguments(bundle);
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack("TvDetailFragment");
+                        ft.commit();
+                    }
+                });
                 recyclerViewPopularTv.setAdapter(adapterPopular);
                 adapterPopular.notifyDataSetChanged();
 

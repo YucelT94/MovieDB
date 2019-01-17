@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.utilities.Config;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        Config.setContextMainActivity(this);
 
         navigation.setItemIconTintList(null);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

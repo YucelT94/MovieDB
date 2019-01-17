@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.yucelt.moviedb.models.movies.popular.MoviePopular;
 import com.yucelt.moviedb.models.movies.toprated.MovieTopRated;
 import com.yucelt.moviedb.network.ApiClient;
 import com.yucelt.moviedb.network.ApiInterface;
+import com.yucelt.moviedb.utilities.OnItemClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,7 +92,19 @@ public class MoviesFragment extends Fragment {
             public void onResponse(Call<MovieTopRated> call, Response<MovieTopRated> response) {
                 topRated = response.body();
 
-                adapterTopRated = new TopRatedMovieAdapter(topRated.getResults());
+                adapterTopRated = new TopRatedMovieAdapter(topRated.getResults(), new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("detail_id", String.valueOf(topRated.getResults().get(position).getId()));
+                        MovieDetailFragment fragment = new MovieDetailFragment();
+                        fragment.setArguments(bundle);
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack("MovieDetailFragment");
+                        ft.commit();
+                    }
+                });
                 recyclerViewTopRatedMovies.setAdapter(adapterTopRated);
                 adapterTopRated.notifyDataSetChanged();
 
@@ -120,7 +134,19 @@ public class MoviesFragment extends Fragment {
             public void onResponse(Call<MovieNowPlaying> call, Response<MovieNowPlaying> response) {
                 nowPlaying = response.body();
 
-                adapterNowPlaying = new NowPlayingMovieAdapter(nowPlaying.getResults());
+                adapterNowPlaying = new NowPlayingMovieAdapter(nowPlaying.getResults(), new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("detail_id", String.valueOf(nowPlaying.getResults().get(position).getId()));
+                        MovieDetailFragment fragment = new MovieDetailFragment();
+                        fragment.setArguments(bundle);
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack("MovieDetailFragment");
+                        ft.commit();
+                    }
+                });
                 recyclerViewNowPlayingMovies.setAdapter(adapterNowPlaying);
                 adapterNowPlaying.notifyDataSetChanged();
 
@@ -150,7 +176,19 @@ public class MoviesFragment extends Fragment {
             public void onResponse(Call<MoviePopular> call, Response<MoviePopular> response) {
                 popular = response.body();
 
-                adapterPopular = new PopularMovieAdapter(popular.getResults());
+                adapterPopular = new PopularMovieAdapter(popular.getResults(), new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("detail_id", String.valueOf(popular.getResults().get(position).getId()));
+                        MovieDetailFragment fragment = new MovieDetailFragment();
+                        fragment.setArguments(bundle);
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack("MovieDetailFragment");
+                        ft.commit();
+                    }
+                });
                 recyclerViewPopularMovies.setAdapter(adapterPopular);
                 adapterPopular.notifyDataSetChanged();
 

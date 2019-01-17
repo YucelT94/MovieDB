@@ -1,9 +1,7 @@
 package com.yucelt.moviedb.adapters.tv;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,9 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.yucelt.moviedb.R;
 import com.yucelt.moviedb.models.tv.popular.Result;
 import com.yucelt.moviedb.network.ApiClient;
-import com.yucelt.moviedb.ui.MovieDetailFragment;
-import com.yucelt.moviedb.ui.TvDetailFragment;
-import com.yucelt.moviedb.utilities.Config;
+import com.yucelt.moviedb.utilities.OnItemClickListener;
 
 import java.util.List;
 
@@ -37,15 +32,27 @@ public class PopularTvAdapter extends RecyclerView.Adapter<PopularTvAdapter.View
 
     private int lastPosition = -1;
 
-    public PopularTvAdapter(List<Result> popular) {
+    private OnItemClickListener listener;
+
+    public PopularTvAdapter(List<Result> popular, OnItemClickListener listener) {
         this.popular = popular;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_popular_tv, parent, false);
-        return new ViewHolder(view);
+        final ViewHolder viewHolder = new ViewHolder(view);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(v, viewHolder.getPosition());
+            }
+        });
+
+        return viewHolder;
     }
 
     @SuppressLint("LongLogTag")
@@ -66,21 +73,6 @@ public class PopularTvAdapter extends RecyclerView.Adapter<PopularTvAdapter.View
         holder.textViewPopularTvTitle.setText(popular.get(position).getName());
         holder.textViewRateTv.setText(String.valueOf(popular.get(position).getVoteAverage()));
 
-        holder.cardViewPopularTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("detail_id", String.valueOf(popular.get(position).getId()));
-
-                TvDetailFragment fragment = new TvDetailFragment();
-                fragment.setArguments(bundle);
-                FragmentTransaction ft = Config.getContextMainActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.addToBackStack("MovieDetailFragment");
-                ft.commit();
-            }
-        });
-
         setAnimation(holder.itemView, position);
     }
 
@@ -90,9 +82,6 @@ public class PopularTvAdapter extends RecyclerView.Adapter<PopularTvAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.cardViewPopularTv)
-        RelativeLayout cardViewPopularTv;
 
         @BindView(R.id.imageViewPopularTv)
         ImageView imageViewPopularTv;

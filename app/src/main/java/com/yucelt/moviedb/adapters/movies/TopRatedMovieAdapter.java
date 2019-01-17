@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -20,8 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.yucelt.moviedb.R;
 import com.yucelt.moviedb.models.movies.toprated.Result;
 import com.yucelt.moviedb.network.ApiClient;
-import com.yucelt.moviedb.ui.MovieDetailFragment;
-import com.yucelt.moviedb.utilities.Config;
+import com.yucelt.moviedb.utilities.OnItemClickListener;
 
 import java.util.List;
 
@@ -35,15 +33,27 @@ public class TopRatedMovieAdapter extends RecyclerView.Adapter<TopRatedMovieAdap
 
     private int lastPosition = -1;
 
-    public TopRatedMovieAdapter(List<Result> topRated) {
+    private OnItemClickListener listener;
+
+    public TopRatedMovieAdapter(List<Result> topRated, OnItemClickListener listener) {
         this.topRated = topRated;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_top_rated_movies, parent, false);
-        return new ViewHolder(view);
+        final ViewHolder viewHolder = new ViewHolder(view);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(v, viewHolder.getPosition());
+            }
+        });
+
+        return viewHolder;
     }
 
     @SuppressLint("LongLogTag")
@@ -62,21 +72,6 @@ public class TopRatedMovieAdapter extends RecyclerView.Adapter<TopRatedMovieAdap
                 .into(holder.imageViewTopRatedMovies);
 
         setAnimation(holder.itemView, position);
-
-        holder.cardViewTopRatedMovies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("detail_id", String.valueOf(topRated.get(position).getId()));
-
-                MovieDetailFragment fragment = new MovieDetailFragment();
-                fragment.setArguments(bundle);
-                FragmentTransaction ft = Config.getContextMainActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.addToBackStack("MovieDetailFragment");
-                ft.commit();
-            }
-        });
     }
 
     @Override
@@ -85,9 +80,6 @@ public class TopRatedMovieAdapter extends RecyclerView.Adapter<TopRatedMovieAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.cardViewTopRatedMovies)
-        RelativeLayout cardViewTopRatedMovies;
 
         @BindView(R.id.imageViewTopRatedMovies)
         ImageView imageViewTopRatedMovies;

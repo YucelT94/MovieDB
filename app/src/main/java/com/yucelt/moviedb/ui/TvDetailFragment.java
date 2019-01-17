@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +19,16 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yucelt.moviedb.BuildConfig;
 import com.yucelt.moviedb.R;
-import com.yucelt.moviedb.models.movies.detail.MovieDetail;
+import com.yucelt.moviedb.adapters.movies.TopRatedMovieAdapter;
+import com.yucelt.moviedb.adapters.tv.TvCastAdapter;
+import com.yucelt.moviedb.models.tv.cast.Cast;
+import com.yucelt.moviedb.models.tv.cast.TvCast;
 import com.yucelt.moviedb.models.tv.detail.TvDetail;
 import com.yucelt.moviedb.network.ApiClient;
 import com.yucelt.moviedb.network.ApiInterface;
+import com.yucelt.moviedb.utilities.OnItemClickListener;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +41,10 @@ public class TvDetailFragment extends Fragment {
     private static final String TMDB_API_KEY = BuildConfig.TMDB_API_KEY;
 
     private ProgressDialog progressDialog;
+
+    private TvCastAdapter adapterTvCast;
+    private RecyclerView.LayoutManager linearLayoutManagerCast;
+    private List<Cast> casts;
 
     ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
@@ -78,6 +90,7 @@ public class TvDetailFragment extends Fragment {
 
         initDialog();
         initPage();
+        initRecyclerViewCast();
 
         return view;
     }
@@ -123,6 +136,34 @@ public class TvDetailFragment extends Fragment {
             @SuppressLint("LongLogTag")
             @Override
             public void onFailure(Call<TvDetail> call, Throwable t) {
+                Log.e(TAG + " FAILURE: : ", t.getLocalizedMessage());
+                hideProgressDialog();
+            }
+        });
+    }
+
+    private void initRecyclerViewCast() {
+        showProgressDialog();
+
+        linearLayoutManagerCast = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewDetailCast.setLayoutManager(linearLayoutManagerCast);
+
+        Call<TvCast> call = apiService.getTvCastCrew(stringId, TMDB_API_KEY);
+        call.enqueue(new Callback<TvCast>() {
+            @Override
+            public void onResponse(Call<TvCast> call, Response<TvCast> response) {
+                TvCast tvCast = response.body();
+
+                adapterTvCast = new TvCastAdapter(tvCast.getCast());
+                recyclerViewDetailCast.setAdapter(adapterTvCast);
+                adapterTvCast.notifyDataSetChanged();
+
+                hideProgressDialog();
+            }
+
+            @SuppressLint("LongLogTag")
+            @Override
+            public void onFailure(Call<TvCast> call, Throwable t) {
                 Log.e(TAG + " FAILURE: : ", t.getLocalizedMessage());
                 hideProgressDialog();
             }

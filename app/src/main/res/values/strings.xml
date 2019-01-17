@@ -11,4 +11,5 @@
     <string name="applogist">AppLogist</string>
     <string name="tv">Tv</string>
     <string name="full_cast_crew"><![CDATA[Full Cast & Crew]]></string>
+    <string name="string_progress">İşleminiz gerçekleştiriliyor…</string>
 </resources>

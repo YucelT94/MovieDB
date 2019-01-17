@@ -170,7 +170,7 @@ public class MoviesFragment extends Fragment {
 
     protected void initDialog() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("İşleminiz gerçekleştiriliyor...");
+        progressDialog.setMessage(getResources().getString(R.string.string_progress));
         progressDialog.setCancelable(false);
     }
 
